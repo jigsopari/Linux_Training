@@ -1,0 +1,83 @@
+/* README file for the RPC programs */
+Sources
+-------
+	(1) avg.x
+	(2) avgclient.c  
+	(3) avgserver.c
+	(4) Makefile
+
+From command line by issuing the command
+# rpcgen  avg.x
+
+This will create 4 files 
+    avg.h     : the header file which need to be included in our 
+                server and client programs.
+    avg_clnt.c: the stub program for our client process.
+    avg_svc.c : the main program for our server process.
+    avg_xdr.c : the XDR routines used by both the client and the server.
+
+step 1
+-------
+  Run the Makefile from command prompt by giving 'make' in the 
+command prompt which will create all the files required for the 
+client and server programs and provide you with two executables.
+
+
+step 2
+-------
+First test the client and the server on the same machine. 
+Start the server by entering the command:
+
+# avgserver &  ( this will run the server program in background )
+
+The rpcinfo utility can be used to verify that the server is running. 
+Typing the command:
+
+# rpcinfo -p 
+
+gives the following output:
+
+	program vers proto   port
+	100000    2   tcp    111  portmapper
+ 	100000    2   udp    111  portmapper
+	 22855    1   udp   1221
+	 22855    1   tcp   1223
+
+
+ Here 22855 is the program number of our application from avg.x and 
+the version number is 1. Edit the "/etc/rpc" file and add the following 
+line to it:
+avg        22855
+
+rpcinfo -p command then gives the following output:
+
+	program vers proto   port
+	100000    2   tcp    111  portmapper
+	100000    2   udp    111  portmapper
+	22855     1   udp   1221  avg
+	22855     1   tcp   1223  avg
+
+step 3
+-------
+To test the client application issue from command line
+
+# avgclient  localhost 6 4 2
+
+the output will be the three numbers and the average of the three.
+
+value   = 6.000000
+value   = 4.000000
+value   = 2.000000
+average = 4.000000
+
+step 4
+-------
+To run the same programs in two different systems. Copy the server 
+executable to remote system and run it, Run the client program from
+your system where use the ipaddress of the remote system instead of 
+local host.
+
+
+
+
+
